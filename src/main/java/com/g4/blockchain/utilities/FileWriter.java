@@ -1,4 +1,4 @@
-package com.g4.blockchain.Utilities;
+package com.g4.blockchain.utilities;
 
 public class FileWriter {
     // Creates file locally
