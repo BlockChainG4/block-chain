@@ -15,11 +15,11 @@ public class PeerResource {
 
     private static PeerController ctrl = new PeerController();
 
-//    @GetMapping
-//    public String getSomething() {
-//        var something = "Something";
-//        return something;
-//    }
+    @GetMapping
+    public String getSomething() {
+        var something = "Something";
+        return something;
+    }
 
     @GetMapping("/{name}")
     public Peer getPeer(@PathVariable("name") String name){

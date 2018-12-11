@@ -9,7 +9,7 @@ public class PeerServerThread extends Thread {
     private Socket client;
     private final Peer peer;
 
-    PeerServerThread(Peer peer, Socket socket) {
+    PeerServerThread(Peer peer, Socket client) {
         super(peer.getName() + System.currentTimeMillis());
         this.peer = peer;
         this.client = client;
@@ -17,9 +17,8 @@ public class PeerServerThread extends Thread {
 
     @Override
     public void run() {
-        try (
-                ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-                final ObjectInputStream in = new ObjectInputStream(client.getInputStream())) {
+        try ( ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
+              final ObjectInputStream in = new ObjectInputStream(client.getInputStream())) {
             Message message = new Message.MessageBuilder().withSender(peer.getPort()).withType(Message.MESSAGE_TYPE.READY).build();
             out.writeObject(message);
             Object fromClient;

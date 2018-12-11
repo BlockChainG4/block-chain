@@ -13,7 +13,9 @@ public class PeerController {
     public Peer addPeer(String name, int port){
         Peer p = new Peer(name, "localhost", port, peers, root);
         p.startHost();
+        System.out.println("PEERS NOW: " + peers.size());
         peers.add(p);
+        System.out.println("PEERS AFTER: " + peers.size());
         return p;
     }
 

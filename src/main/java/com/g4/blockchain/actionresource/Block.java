@@ -1,11 +1,12 @@
 package com.g4.blockchain.actionresource;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Block {
+public class Block implements Serializable {
     private int index;
     private String hash;
     private String prevHash;

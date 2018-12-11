@@ -45,10 +45,6 @@ public class Peer {
         return port;
     }
 
-    public List<Peer> getPeers() {
-        return peers;
-    }
-
     public List<Block> getBlockchain() {
         return blockchain;
     }
@@ -126,7 +122,7 @@ public class Peer {
                 System.out.println(String.format("Server %s started", serverSocket.getLocalPort()));
                 isListening = true;
                 while (isListening) {
-                    final PeerServerThread thread = new PeerServerThread(Peer.this, serverSocket.accept());
+                    PeerServerThread thread = new PeerServerThread(Peer.this, serverSocket.accept());
                     thread.start();
                 }
                 serverSocket.close();
