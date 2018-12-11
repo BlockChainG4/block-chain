@@ -1,17 +1,19 @@
-package com.g4.blockchain.models;
+package com.g4.blockchain.peerresource;
+
+import com.g4.blockchain.actionresource.Block;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Transaction implements Serializable {
+public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
 
     int sender;
     int receiver;
-    TRANSACTION_TYPE type;
+    MESSAGE_TYPE type;
     List<Block> blocks;
 
-    public enum TRANSACTION_TYPE {
+    public enum MESSAGE_TYPE {
         READY, INFO_NEW_BLOCK, REQ_ALL_BLOCKS, RSP_ALL_BLOCKS
     }
 
@@ -21,7 +23,7 @@ public class Transaction implements Serializable {
     }
 
     static class MessageBuilder {
-        private final Transaction message = new Transaction();
+        private final Message message = new Message();
 
         MessageBuilder withSender(final int sender) {
             message.sender = sender;
@@ -33,7 +35,7 @@ public class Transaction implements Serializable {
             return this;
         }
 
-        MessageBuilder withType(final TRANSACTION_TYPE type) {
+        MessageBuilder withType(final MESSAGE_TYPE type) {
             message.type = type;
             return this;
         }
@@ -43,7 +45,7 @@ public class Transaction implements Serializable {
             return this;
         }
 
-        Transaction build() {
+        Message build() {
             return message;
         }
 

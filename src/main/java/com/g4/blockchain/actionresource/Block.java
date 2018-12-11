@@ -1,4 +1,4 @@
-package com.g4.blockchain.models;
+package com.g4.blockchain.actionresource;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -10,11 +10,7 @@ public class Block {
     private String hash;
     private String prevHash;
     private Long timestamp;
-    private List<Transaction> transactions = new ArrayList<>();
-
-
-    public Block() {
-    }
+//    private List<Transaction> transactions = new ArrayList<>();
 
     public Block(int index, String prevHash) {
         this.index = index;
@@ -39,9 +35,9 @@ public class Block {
         return timestamp;
     }
 
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
+//    public List<Message> getTransactions() {
+//        return transactions;
+//    }
 
     private String calculateHash(String text) {
         MessageDigest digest;
@@ -69,7 +65,7 @@ public class Block {
                 "hash='" + hash + '\'' +
                 ", prevHash='" + prevHash + '\'' +
                 ", timestamp=" + timestamp +
-                ", transactions=" + transactions +
+//                ", transactions=" + transactions +
                 '}';
     }
 }
