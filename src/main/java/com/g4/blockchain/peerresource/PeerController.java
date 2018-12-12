@@ -33,17 +33,17 @@ public class PeerController {
     }
 
     public List<Block> getPeerBlocks(String name) {
-        Peer agent = getPeer(name);
-        if (agent != null) {
-            return agent.getBlockchain();
+        Peer peer = getPeer(name);
+        if (peer != null) {
+            return peer.getBlockchain();
         }
         return null;
     }
 
     public Block createBlock(final String name) {
-        Peer agent = getPeer(name);
-        if (agent != null) {
-            return agent.createBlock();
+        Peer peer = getPeer(name);
+        if (peer != null) {
+            return peer.createBlock();
         }
         return null;
     }
