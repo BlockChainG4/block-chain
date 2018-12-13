@@ -17,7 +17,7 @@ public class RetryService {
     @Inject
     RestTemplate restTemplate;
 
-    @Retryable(value = {UnknownHostException.class}, backoff = @Backoff(5000))
+    @Retryable(value = {UnknownHostException.class}, maxAttempts = 10, backoff = @Backoff(15000))
     public Peers addPeer(String peer) throws UnknownHostException {
         Peer peerRequest = new Peer();
         peerRequest.setAddress(peer);
