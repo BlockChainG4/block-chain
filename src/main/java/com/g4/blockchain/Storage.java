@@ -1,18 +1,18 @@
 package com.g4.blockchain;
 
 public class Storage {
-    private Peers peers;
-    private BlockChain blockChain;
+    private static Peers peers = new Peers();
 
     public Storage() {
-        this.peers = new Peers();
     }
 
     public Peers getPeers() {
-        return this.peers;
+        return peers;
     }
 
-    public void setPeers(Peers peers) {
-        this.peers = peers;
+    public Peers addPeer(Peer p) {
+        peers.add(p);
+        return peers;
     }
+
 }

@@ -1,14 +1,12 @@
 package com.g4.blockchain;
 
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.backoff.ExponentialBackOffPolicy;
-import org.springframework.retry.backoff.FixedBackOffPolicy;
-import org.springframework.retry.policy.SimpleRetryPolicy;
-import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
@@ -16,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class BlockChainApplication {
 
     @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     Storage storage() {
         return new Storage();
     }

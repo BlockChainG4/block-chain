@@ -3,7 +3,10 @@ package com.g4.blockchain.resources;
 import com.g4.blockchain.Peer;
 import com.g4.blockchain.Peers;
 import com.g4.blockchain.Storage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Consumes;
@@ -16,8 +19,13 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class PeerResource {
 
+    private Logger logger = LoggerFactory.getLogger(PeerResource.class);
+
     @Autowired
     Storage storage;
+
+    @Value("${peer.self}")
+    private String self;
 
     @GetMapping
     public Peers getPeers() {
@@ -25,9 +33,13 @@ public class PeerResource {
     }
 
     @PostMapping
-    public Peers addPeer(@RequestBody Peer peer) {
-        storage.getPeers().add(peer);
-        return storage.getPeers();
+    public Peer addPeer(@RequestBody Peer peer) {
+        if (peer.getAddress().equals(self)) {
+            logger.error("Can't add self to peer list");
+            throw new RuntimeException("Could not add self to peer list");
+        }
+        storage.addPeer(peer);
+        return peer;
     }
 
     @GetMapping(path = "ping")
