@@ -29,6 +29,22 @@ public class Block implements Serializable {
         this.previousHash = previousHash;
     }
 
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public void setProof(long proof) {
+        this.proof = proof;
+    }
+
     public long getTimeStamp() {
         return timeStamp;
     }

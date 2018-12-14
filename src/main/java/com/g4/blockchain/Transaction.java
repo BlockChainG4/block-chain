@@ -1,24 +1,34 @@
 package com.g4.blockchain;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
-public class Transaction {
+public class Transaction implements Serializable {
 
     private String sender;
     private String recipient;
-    private String operator;
-    private long firstOperand;
-    private long secondOperand;
-    private long result;
+//    private String operator;
+//    private BigDecimal firstOperand;
+//    private BigDecimal secondOperand;
+    private BigDecimal result;
     private List<Block> blocks;
 
-    public Transaction(String sender, String recipient, String operator, long firstOperand, long secondOperand) {
+    //RETURNED TRANSACTION
+    public Transaction(String sender, String recipient, BigDecimal result) {
         this.sender = sender;
         this.recipient = recipient;
-        this.operator = operator;
-        this.firstOperand = firstOperand;
-        this.secondOperand = secondOperand;
+        this.result = result;
     }
+
+    //FOR CALCULATION
+//    public Transaction(String sender, String recipient, String operator, BigDecimal firstOperand, BigDecimal secondOperand) {
+//        this.sender = sender;
+//        this.recipient = recipient;
+//        this.operator = operator;
+//        this.firstOperand = firstOperand;
+//        this.secondOperand = secondOperand;
+//    }
 
     public String getSender() {
         return sender;
@@ -28,19 +38,19 @@ public class Transaction {
         return recipient;
     }
 
-    public String getOperator() {
-        return operator;
-    }
+//    public String getOperator() {
+//        return operator;
+//    }
+//
+//    public BigDecimal getFirstOperand() {
+//        return firstOperand;
+//    }
+//
+//    public BigDecimal getSecondOperand() {
+//        return secondOperand;
+//    }
 
-    public long getFirstOperand() {
-        return firstOperand;
-    }
-
-    public long getSecondOperand() {
-        return secondOperand;
-    }
-
-    public long getResult() {
+    public BigDecimal getResult() {
         return result;
     }
 
