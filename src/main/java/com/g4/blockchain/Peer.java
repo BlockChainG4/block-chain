@@ -1,6 +1,12 @@
 package com.g4.blockchain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Peer {
+
+    @Id
     private String address;
 
     public Peer() {

@@ -23,10 +23,10 @@ public class TestRunner implements CommandLineRunner {
     private String self;
 
     @Inject
-    RetryService retryService;
+    private RetryService retryService;
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws InterruptedException {
        List<String> peersAdded = new ArrayList<>();
         while (true) {
             for (String peer : initialPeers) {
