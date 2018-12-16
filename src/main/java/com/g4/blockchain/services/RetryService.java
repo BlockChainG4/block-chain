@@ -3,6 +3,8 @@ package com.g4.blockchain.services;
 import com.g4.blockchain.Peer;
 import com.g4.blockchain.Peers;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
@@ -32,6 +34,11 @@ public class RetryService {
 
     public Peers getPeers(String peer) {
         return restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer"), Peers.class).getBody();
+    }
+
+    public Boolean ping(String peer) {
+        ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer/ping"), Boolean.class);
+        return responseEntity.getStatusCode().equals(HttpStatus.OK);
     }
 
     @Recover
