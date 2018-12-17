@@ -37,5 +37,14 @@ public class TestRunner implements CommandLineRunner {
             if (peersAdded.size() > 2) break;
         }
         logger.info("Peer " + self + " is done adding itself to peers");
+
+        BlockChain chain = null;
+        for (String peer : peersAdded) {
+            BlockChain c = retryService.getLatestChain(peer);
+            if (chain == null) chain = c;
+            if (chain != null && chain.getHead().getTimeStamp() < c.getHead().getTimeStamp()) {
+                chain = c;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.g4.blockchain.services;
 
+import com.g4.blockchain.BlockChain;
 import com.g4.blockchain.Peer;
 import com.g4.blockchain.Peers;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,11 @@ public class RetryService {
     public Boolean ping(String peer) {
         ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer/ping"), Boolean.class);
         return responseEntity.getStatusCode().equals(HttpStatus.OK);
+    }
+
+    public BlockChain getLatestChain(String peer) {
+        // Find latest chain and return that one.
+        return restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer/block_chain"), BlockChain.class).getBody();
     }
 
     @Recover
