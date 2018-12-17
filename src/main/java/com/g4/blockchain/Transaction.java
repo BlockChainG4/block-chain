@@ -3,14 +3,16 @@ package com.g4.blockchain;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Scanner;
 
 public class Transaction implements Serializable {
 
     private String sender;
     private String recipient;
-//    private String operator;
-//    private BigDecimal firstOperand;
-//    private BigDecimal secondOperand;
+    private char operator;
+    private double firstOperand;
+    private double secondOperand;
+    private double answer;
     private BigDecimal result;
     private List<Block> blocks;
 
@@ -23,13 +25,13 @@ public class Transaction implements Serializable {
     }
 
     //FOR CALCULATION
-//    public Transaction(String sender, String recipient, String operator, BigDecimal firstOperand, BigDecimal secondOperand) {
-//        this.sender = sender;
-//        this.recipient = recipient;
-//        this.operator = operator;
-//        this.firstOperand = firstOperand;
-//        this.secondOperand = secondOperand;
-//    }
+    public Transaction(String sender, String recipient, char operator, double firstOperand, double secondOperand) {
+        this.sender = sender;
+        this.recipient = recipient;
+        this.operator = operator;
+        this.firstOperand = firstOperand;
+        this.secondOperand = secondOperand;
+    }
 
     public String getSender() {
         return sender;
@@ -39,17 +41,17 @@ public class Transaction implements Serializable {
         return recipient;
     }
 
-//    public String getOperator() {
-//        return operator;
-//    }
-//
-//    public BigDecimal getFirstOperand() {
-//        return firstOperand;
-//    }
-//
-//    public BigDecimal getSecondOperand() {
-//        return secondOperand;
-//    }
+    public char getOperator() {
+        return operator;
+    }
+
+    public double getFirstOperand() {
+        return firstOperand;
+    }
+
+    public double getSecondOperand() {
+        return secondOperand;
+    }
 
     public BigDecimal getResult() {
         return result;
@@ -58,4 +60,30 @@ public class Transaction implements Serializable {
     public List<Block> getBlocks() {
         return blocks;
     }
+
+    public void calculate() {
+        Scanner scanObject = new Scanner(System.in);
+
+        System.out.println("Enter first number: ");
+        firstOperand = scanObject.nextInt();
+
+        System.out.println("Enter second number: ");
+        secondOperand = scanObject.nextInt();
+
+        System.out.println("What operation: ");
+        operator = scanObject.next().charAt(0);
+
+        switch (operator){
+            case '+': answer = firstOperand + secondOperand;
+                break;
+            case '-': answer = firstOperand - secondOperand;
+                break;
+            case '*': answer = firstOperand * secondOperand;
+                break;
+            case '/': answer = firstOperand / secondOperand;
+                break;
+        }
+        System.out.println(firstOperand+" "+operator+" "+firstOperand+" "+answer);
+    }
+
 }

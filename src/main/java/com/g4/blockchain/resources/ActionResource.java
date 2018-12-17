@@ -36,6 +36,8 @@ public class ActionResource {
         return Collections.singletonMap("message", String.format("Transaction will be added to Block {%d}", index));
     }
 
+    String hostname = System.getenv().getOrDefault("HOSTNAME", "Unknown");
+
     @GetMapping(path = "mine")
     public Map<String, Object> mine() {
         Block lastBlock = service.getLatestBlock();
