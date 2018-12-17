@@ -10,9 +10,8 @@ public class Transaction implements Serializable {
     private String sender;
     private String recipient;
     private char operator;
-    private double firstOperand;
-    private double secondOperand;
-    private double answer;
+    private BigDecimal firstOperand;
+    private BigDecimal secondOperand;
     private BigDecimal result;
     private List<Block> blocks;
 
@@ -25,12 +24,13 @@ public class Transaction implements Serializable {
     }
 
     //FOR CALCULATION
-    public Transaction(String sender, String recipient, char operator, double firstOperand, double secondOperand) {
+    public Transaction(String sender, String recipient, char operator, BigDecimal firstOperand, BigDecimal secondOperand) {
         this.sender = sender;
         this.recipient = recipient;
         this.operator = operator;
         this.firstOperand = firstOperand;
         this.secondOperand = secondOperand;
+        this.result = calculate();
     }
 
     public String getSender() {
@@ -45,11 +45,11 @@ public class Transaction implements Serializable {
         return operator;
     }
 
-    public double getFirstOperand() {
+    public BigDecimal getFirstOperand() {
         return firstOperand;
     }
 
-    public double getSecondOperand() {
+    public BigDecimal getSecondOperand() {
         return secondOperand;
     }
 
@@ -61,29 +61,21 @@ public class Transaction implements Serializable {
         return blocks;
     }
 
-    public void calculate() {
-        Scanner scanObject = new Scanner(System.in);
-
-        System.out.println("Enter first number: ");
-        firstOperand = scanObject.nextInt();
-
-        System.out.println("Enter second number: ");
-        secondOperand = scanObject.nextInt();
-
-        System.out.println("What operation: ");
-        operator = scanObject.next().charAt(0);
+    public BigDecimal calculate() {
 
         switch (operator){
-            case '+': answer = firstOperand + secondOperand;
+            case '+': result = firstOperand.add(secondOperand);
                 break;
-            case '-': answer = firstOperand - secondOperand;
+            case '-': result = firstOperand.subtract(secondOperand);
                 break;
-            case '*': answer = firstOperand * secondOperand;
+            case '*': result = firstOperand.multiply(secondOperand);
                 break;
-            case '/': answer = firstOperand / secondOperand;
+            case '/': result = firstOperand.divide(secondOperand);
                 break;
         }
-        System.out.println(firstOperand+" "+operator+" "+firstOperand+" "+answer);
+        System.out.println(firstOperand+" "+operator+" "+firstOperand+" "+result);
+
+        return result;
     }
 
 }
