@@ -42,8 +42,10 @@ public class TestRunner implements CommandLineRunner {
         for (String peer : peersAdded) {
             BlockChain c = retryService.getLatestChain(peer);
             if (chain == null) chain = c;
-            if (chain != null && chain.getHead().getTimeStamp() < c.getHead().getTimeStamp()) {
-                chain = c;
+            if (chain != null && c.size() > chain.size()) {
+                if (chain.get(chain.size() - 1).getTimeStamp() < c.get(c.size() - 1).getTimeStamp()) {
+                    chain = c;
+                }
             }
         }
     }

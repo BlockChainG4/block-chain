@@ -1,5 +1,6 @@
 package com.g4.blockchain.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.g4.blockchain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,7 @@ public class BlockChainService {
         BlockChain chain = retryService.getLatestChain(address);
 
         // Replace comparison with stored blockchain
-        if (chain.getHead().getTimeStamp() < chain.getHead().getTimeStamp()) {
+        if (chain.get(chain.size() - 1).getTimeStamp() < chain.get(chain.size() - 1).getTimeStamp()) {
             // It is newer than the one we have here
             // so we save it to a file and broadcast it to all out peers that we have a newer one
 

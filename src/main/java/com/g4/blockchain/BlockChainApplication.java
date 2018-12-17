@@ -1,5 +1,6 @@
 package com.g4.blockchain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -14,6 +15,11 @@ public class BlockChainApplication {
     @Bean
     RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();
+    }
+
+    @Bean
+    ObjectMapper mapper() {
+        return new ObjectMapper();
     }
 
     public static void main(String[] args) {
