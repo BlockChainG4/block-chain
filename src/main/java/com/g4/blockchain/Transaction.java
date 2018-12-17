@@ -1,11 +1,11 @@
 package com.g4.blockchain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.g4.blockchain.utilities.Hashing;
 
 import java.io.Serializable;
 
 public class Transaction implements Serializable {
+    private String hash;
     private String operation;
     private String result;
 
@@ -33,15 +33,16 @@ public class Transaction implements Serializable {
         this.result = result;
     }
 
-    @Override
-    public String toString() {
-        String transaction = "";
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            transaction = mapper.writeValueAsString(this);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return transaction;
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    // This Calculates the transaction hash (which will be used as its Id)
+    private String calulateHash() {
+        return Hashing.applySha256(operation + result);
     }
 }

@@ -6,6 +6,10 @@ import java.util.LinkedList;
 
 public class BlockChain extends LinkedList<Block> {
 
+    public static final int BLOCK_SIZE = 3;
+    public static final int DIFFICULTY = 4;
+
+
     public Boolean isChainValid(int difficulty) throws JsonProcessingException {
         Block currentBlock;
         Block previousBlock;
@@ -32,6 +36,16 @@ public class BlockChain extends LinkedList<Block> {
             }
         }
         return true;
+    }
+
+    public BlockChain addTransaction(Transaction transaction) throws JsonProcessingException {
+        if (this.get(this.size() - 1).getTransactions().size() == BLOCK_SIZE) {
+            this.get(this.size() - 1).mineBlock(DIFFICULTY);
+            String previousHash = this.get(this.size() - 1).getHash();
+            this.add(new Block(previousHash));
+        }
+        this.get(this.size() - 1).addTransaction(transaction);
+        return this;
     }
 
 }

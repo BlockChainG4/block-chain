@@ -2,22 +2,19 @@ package com.g4.blockchain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.g4.blockchain.utilities.Hashing;
 
-import javax.inject.Inject;
-import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.LinkedList;
 
 public class Block {
-
-    @Inject
-    ObjectMapper mapper;
 
     private String previousHash;
     private String hash;
     private long timeStamp;
     private int nonce;
     private LinkedList<Transaction> transactions;
+    private String merkleRoot;
 
     public Block(String previousHash) throws JsonProcessingException {
         this(previousHash, new LinkedList<>());
@@ -54,41 +51,37 @@ public class Block {
     public String calculateHash() throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         String data = "";
-        data += "\"previousHash\": \"" + previousHash + "\","
-                + "\"timeStamp\": " + Long.toString(timeStamp) + ","
-                + "\"nonce\": " + Integer.toString(nonce) + ",";
+        data += previousHash +
+                Long.toString(timeStamp) +
+                Integer.toString(nonce) +
+                merkleRoot;
 
         data += "\"transactions\":";
         data += mapper.writeValueAsString(transactions);
-        return applySha256(data);
+        return Hashing.applySha256(data);
     }
 
-    private String applySha256(String input){
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            //Applies sha256 to our input,
-            byte[] hash = digest.digest(input.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer(); // This will contain hash as hexidecimal
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
-                if(hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        }
-        catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     public void mineBlock(int difficulty) throws JsonProcessingException {
+        merkleRoot = Hashing.getMerkleRoot(transactions);
         String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0"
-        while(!hash.substring( 0, difficulty).equals(target)) {
+        while(!this.hash.substring( 0, difficulty).equals(target)) {
             nonce ++;
-            hash = calculateHash();
+            this.hash = calculateHash();
         }
-        System.out.println("Block Mined!!! : " + hash);
+        System.out.println("Block Mined!!! : " + this.hash);
+    }
+    //Add transactions to this block
+    public boolean addTransaction(Transaction transaction) {
+        //process transaction and check if valid, unless block is genesis block then ignore.
+        if(transaction == null) return false;
+        transactions.add(transaction);
+        System.out.println("Transaction Successfully added to Block");
+        return true;
     }
 
-
+    public LinkedList<Transaction> getTransactions() {
+        return transactions;
+    }
 }
