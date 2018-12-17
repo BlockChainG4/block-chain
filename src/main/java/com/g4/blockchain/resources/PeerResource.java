@@ -56,7 +56,13 @@ public class PeerResource {
         return blockChainService.getChain();
     }
 
-    @PostMapping(path = "broadcast_mining/{address}")
+
+    /**
+     * Call this method to tell your peers that you have a newer updated version
+     * of the chain and they should query you for it
+     * @param address
+     */
+    @PutMapping(path = "broadcast_mining/{address}")
     public void broadCastMining(@PathVariable("address") String address) {
         blockChainService.broadCastMining(address);
     }

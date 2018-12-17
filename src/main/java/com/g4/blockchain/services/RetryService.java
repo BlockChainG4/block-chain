@@ -1,5 +1,6 @@
 package com.g4.blockchain.services;
 
+import com.g4.blockchain.Block;
 import com.g4.blockchain.BlockChain;
 import com.g4.blockchain.Peer;
 import com.g4.blockchain.Peers;
@@ -45,6 +46,14 @@ public class RetryService {
     public BlockChain getLatestChain(String peer) {
         // Find latest chain and return that one.
         return restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer/block_chain"), BlockChain.class).getBody();
+    }
+
+    public void broadCastNewChain(String peer) {
+        restTemplate.put("http://".concat(peer).concat(":8080/peer/broadcast_mining/").concat(self), null);
+    }
+
+    public void broadCastResult(String peer, Block block) {
+        restTemplate.postForLocation("http://".concat(peer).concat(":8080/peer/broadcast_result"), block);
     }
 
     @Recover
