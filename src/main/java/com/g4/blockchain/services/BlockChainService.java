@@ -46,6 +46,7 @@ public class BlockChainService {
 
     public int addTransaction(Transaction trans){
         this.currentTransactions.add(trans);
+        trans.calculate();
         return this.blockChain.get(this.blockChain.size() - 1).getIndex() + 1;
     }
 
