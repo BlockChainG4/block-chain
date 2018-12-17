@@ -7,11 +7,15 @@ import com.g4.blockchain.Transaction;
 import com.g4.blockchain.dto.BlockChainResponseDto;
 import com.g4.blockchain.services.BlockChainService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +27,8 @@ public class ActionResource {
 
     @Autowired
     BlockChainService service;
+
+    Environment environment;
 
     @PostMapping(path= "transaction")
     public Map<String, String> addTransaction(@RequestBody Transaction trans) {
@@ -51,4 +57,8 @@ public class ActionResource {
         return new BlockChainResponseDto(service.getBlockChain());
     }
 
+    @GetMapping(path = "whoami")
+    public String whoami(HttpServletRequest request) throws UnknownHostException {
+        return "hey: " + request.getRequestURL().toString();
+    }
 }

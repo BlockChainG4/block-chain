@@ -19,6 +19,7 @@ public class Transaction implements Serializable {
         this.sender = sender;
         this.recipient = recipient;
         this.result = result;
+//        calculateHash();
     }
 
     //FOR CALCULATION
