@@ -1,7 +1,10 @@
 package com.g4.blockchain.resources;
 
+import com.g4.blockchain.Block;
+import com.g4.blockchain.BlockChain;
 import com.g4.blockchain.Peer;
 import com.g4.blockchain.PeerRepository;
+import com.g4.blockchain.services.BlockChainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -22,6 +26,9 @@ public class PeerResource {
 
     @Autowired
     private PeerRepository repository;
+
+    @Autowired
+    private BlockChainService blockChainService;
 
     @Value("${peer.self}")
     private String self;
@@ -42,6 +49,21 @@ public class PeerResource {
         } else {
             throw new RuntimeException("Peer already added");
         }
+    }
+
+    @GetMapping(path = "block_chain")
+    public BlockChain getChain() {
+        return blockChainService.getChain();
+    }
+
+    @PostMapping(path = "broadcast_mining/{address}")
+    public void broadCastMining(@PathVariable("address") String address) {
+        blockChainService.broadCastMining(address);
+    }
+
+    @PostMapping(path = "broadcast_result")
+    public void broadCastResult(@RequestBody Block block) {
+        blockChainService.broadCastResult(block);
     }
 
     @GetMapping(path = "ping")
