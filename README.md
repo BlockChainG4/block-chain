@@ -25,6 +25,9 @@ _B. Blockchain Implementation_
 
 _C. P2P Network_
 
+![image](https://user-images.githubusercontent.com/16150075/50159949-509a6d00-02d8-11e9-9913-dc95358c8e72.png)
+
+
 
 #### _II. Reproducible Setup_
 
