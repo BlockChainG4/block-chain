@@ -1,5 +1,6 @@
 package com.g4.blockchain;
 
+import com.g4.blockchain.services.BlockChainService;
 import com.g4.blockchain.services.RetryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class TestRunner implements CommandLineRunner {
     @Inject
     private RetryService retryService;
 
+    @Inject
+    private BlockChainService blockChainService;
+
     @Override
     public void run(String... args) throws InterruptedException {
        List<String> peersAdded = new ArrayList<>();
@@ -43,10 +47,12 @@ public class TestRunner implements CommandLineRunner {
             BlockChain c = retryService.getLatestChain(peer);
             if (chain == null) chain = c;
             if (chain != null && c.size() > chain.size()) {
-                if (chain.get(chain.size() - 1).getTimeStamp() < c.get(c.size() - 1).getTimeStamp()) {
+                if (blockChainService.consensus(c, chain)) {
                     chain = c;
                 }
             }
         }
+
+
     }
 }

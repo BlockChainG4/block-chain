@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,9 @@ public class BlockChainService {
     @Autowired
     private ObjectMapper mapper;
 
+    @Autowired
+    private ScriptEngineManager scriptEngineManager;
+
     @Value("${peer.self}")
     private String self;
 
@@ -34,8 +40,10 @@ public class BlockChainService {
         // Read from file and get the entire block chain
         BlockChain chain = new BlockChain();
         List<String> blocks = FileWriter.readFileInList(blockChainFileName);
-        for (int i = blocks.size() - 1; i > 0; i--) {
-            chain.add(mapper.readValue(blocks.get(i), Block.class));
+        if (blocks.size() != 0) {
+            for (int i = blocks.size() - 1; i > 0; i--) {
+                chain.add(mapper.readValue(blocks.get(i), Block.class));
+            }
         }
         return chain;
     }
@@ -59,7 +67,7 @@ public class BlockChainService {
         // Check if incoming block is newer than latest in chain
         // and that the previous hash is the same. If not, ignore
         BlockChain chain = getChain();
-        Block latestChainBlock = chain.get(chain.size() - 1);
+        Block latestChainBlock = chain.getLast();
         if (verifyBlock(block, latestChainBlock) && block.getPreviousHash().equals(latestChainBlock.getHash())) {
             Iterable<Peer> peers = peerRepository.findAll();
             peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), block));
@@ -87,5 +95,22 @@ public class BlockChainService {
 
     public boolean verifyBlock(Block newBlock, Block ownBlock) {
         return newBlock.getTimeStamp() > ownBlock.getTimeStamp();
+    }
+
+    public BlockChain addTransaction(Transaction transaction) throws IOException, ScriptException {
+        BlockChain chain = getChain();
+        ScriptEngine engine = scriptEngineManager.getEngineByName("JavaScript");
+        transaction.setResult(engine.eval(transaction.getOperation()).toString());
+        chain.addTransaction(transaction);
+        return chain;
+    }
+
+    public BlockChain mine() throws IOException {
+        BlockChain chain = getChain();
+        for (Peer peer : peerRepository.findAll()) {
+            retryService.broadCastResult(peer.getAddress(), chain.getLast());
+        }
+        chain.mine();
+        return chain;
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.web.client.RestTemplate;
 
+import javax.script.ScriptEngineManager;
+
 @SpringBootApplication
 @EnableRetry
 public class BlockChainApplication {
@@ -20,6 +22,11 @@ public class BlockChainApplication {
     @Bean
     ObjectMapper mapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    ScriptEngineManager scriptEngineManager() {
+        return new ScriptEngineManager();
     }
 
     public static void main(String[] args) {

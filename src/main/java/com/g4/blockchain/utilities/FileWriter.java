@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.*;
 
 @Service // filewriter in test know about th9
@@ -50,8 +51,11 @@ public class FileWriter {
         }
 
     }
-    public static List<String> readFileInList(String fileName)
-    {
+    public static List<String> readFileInList(String fileName) throws IOException {
+
+        if (!Files.exists(Paths.get(fileName))) {
+            Files.createFile(Paths.get(fileName));
+        }
 
         List<String> lines = List.of();
         try
