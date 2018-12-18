@@ -85,12 +85,12 @@ How to use:
 * Clone project
 * Have docker running
 * Java 11
-* Maeven
+* Maven
 * Execute `./run.sh`
 
 **Test Scenario:**
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Yt-MutBzLE/0.jpg)](https://youtu.be/6Yt-MutBzLE)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/tHkbuPC4ti8/0.jpg)](https://www.youtube.com/watch?v=tHkbuPC4ti8)
 
 To attach a new peer:
 
