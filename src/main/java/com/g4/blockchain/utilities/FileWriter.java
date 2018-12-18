@@ -1,7 +1,10 @@
 package com.g4.blockchain.utilities;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.g4.blockchain.BlockChain;
 import org.springframework.stereotype.Service;
 
+import javax.inject.Inject;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -14,7 +17,10 @@ public class FileWriter {
     // Creates file locally
     //
 
-    public static void save(List<String> blockArray, String fileName) throws Exception {
+    @Inject
+    private ObjectMapper mapper;
+
+    public void save(BlockChain chain, String fileName) throws Exception {
         /*PrintWriter pw = new PrintWriter(new FileOutputStream("blockchain.txt"));
         for (String hash : blockArray)
             pw.println(hash);
@@ -29,11 +35,9 @@ public class FileWriter {
             Writer fileWriter = new java.io.FileWriter(fileName);
             bufferedWriter = new BufferedWriter(fileWriter);
 
+            String chainJson = mapper.writeValueAsString(chain);
             // Writing the content
-            for(String line : blockArray) {
-                bufferedWriter.write(line);
-                bufferedWriter.write(System.getProperty("line.separator"));
-            }
+            bufferedWriter.write(chainJson);
         } catch (IOException e) {
             System.out.println("Problem occurs when creating file " + fileName);
             e.printStackTrace();
@@ -51,17 +55,18 @@ public class FileWriter {
         }
 
     }
-    public static List<String> readFileInList(String fileName) throws IOException {
+    public BlockChain readFileInList(String fileName) throws IOException {
 
         if (!Files.exists(Paths.get(fileName))) {
             Files.createFile(Paths.get(fileName));
         }
 
-        List<String> lines = List.of();
         try
         {
-            lines =
-                    Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
+            String chainJSON = Files.readString(Paths.get(fileName), StandardCharsets.UTF_8);
+            if (!chainJSON.isEmpty()) {
+                return mapper.readValue(chainJSON, BlockChain.class);
+            }
         }
 
         catch (IOException e)
@@ -70,7 +75,8 @@ public class FileWriter {
             // do something
             e.printStackTrace();
         }
-        return lines;
+
+        return new BlockChain();
     }
 
 }

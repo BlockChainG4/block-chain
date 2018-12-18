@@ -27,6 +27,9 @@ public class Block {
         this.hash = calculateHash();
     }
 
+    public Block() {
+    }
+
     public String getPreviousHash() {
         return previousHash;
     }
@@ -64,6 +67,7 @@ public class Block {
 
 
     public void mineBlock(int difficulty) throws JsonProcessingException {
+        this.timeStamp = Calendar.getInstance().getTimeInMillis();
         merkleRoot = Hashing.getMerkleRoot(transactions);
         String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0"
         while(!this.hash.substring( 0, difficulty).equals(target)) {
@@ -83,5 +87,29 @@ public class Block {
 
     public LinkedList<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
+    public int getNonce() {
+        return nonce;
+    }
+
+    public void setNonce(int nonce) {
+        this.nonce = nonce;
+    }
+
+    public void setTransactions(LinkedList<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public String getMerkleRoot() {
+        return merkleRoot;
+    }
+
+    public void setMerkleRoot(String merkleRoot) {
+        this.merkleRoot = merkleRoot;
     }
 }

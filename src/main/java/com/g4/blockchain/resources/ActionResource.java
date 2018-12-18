@@ -30,7 +30,12 @@ public class ActionResource {
 
 
     @PostMapping(path = "mine")
-    public BlockChain mine() throws IOException {
+    public BlockChain mine() throws Exception {
         return service.mine();
+    }
+
+    @GetMapping
+    public BlockChain getChain() throws IOException {
+        return service.getChain();
     }
 }

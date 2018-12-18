@@ -53,13 +53,4 @@ public class BlockChain extends LinkedList<Block> {
         this.add(new Block(previousHash));
         return this;
     }
-
-    public List<String> getBlocksAsString(ObjectMapper mapper) throws JsonProcessingException {
-        List<String> blocks = new ArrayList<>();
-        for (Block b : this) {
-            blocks.add(mapper.writeValueAsString(b));
-        }
-        return blocks;
-    }
-
 }

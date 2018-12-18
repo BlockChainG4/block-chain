@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.g4.blockchain.*;
 import com.g4.blockchain.utilities.FileWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -30,21 +32,21 @@ public class BlockChainService {
     @Autowired
     private ScriptEngineManager scriptEngineManager;
 
+    @Autowired
+    private FileWriter fileWriter;
+
     @Value("${peer.self}")
     private String self;
 
     @Value("${blockchain.file.name}")
     private String blockChainFileName;
 
+    Logger logger = LoggerFactory.getLogger(BlockChainService.class);
+
     public BlockChain getChain() throws IOException {
         // Read from file and get the entire block chain
-        BlockChain chain = new BlockChain();
-        List<String> blocks = FileWriter.readFileInList(blockChainFileName);
-        if (blocks.size() != 0) {
-            for (int i = blocks.size() - 1; i > 0; i--) {
-                chain.add(mapper.readValue(blocks.get(i), Block.class));
-            }
-        } else {
+        BlockChain chain = fileWriter.readFileInList(blockChainFileName);
+        if (chain.size() == 0) {
             chain.add(new Block("0"));
         }
         return chain;
@@ -59,7 +61,7 @@ public class BlockChainService {
         if (consensus(newChain, ownChain)) {
             // It is newer than the one we have here
             // so we save it to a file and broadcast it to all out peers that we have a newer one
-            FileWriter.save(newChain.getBlocksAsString(mapper), blockChainFileName);
+            fileWriter.save(newChain, blockChainFileName);
             retryService.broadCastNewChain(self);
         }
     }
@@ -70,12 +72,13 @@ public class BlockChainService {
         // and that the previous hash is the same. If not, ignore
         BlockChain chain = getChain();
         Block latestChainBlock = chain.getLast();
-        if (verifyBlock(block, latestChainBlock) && block.getPreviousHash().equals(latestChainBlock.getHash())) {
+        if (verifyBlock(block, latestChainBlock)) {
             Iterable<Peer> peers = peerRepository.findAll();
             peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), block));
             chain.add(block);
             chain.mine();
-            FileWriter.save(chain.getBlocksAsString(mapper), blockChainFileName);
+            block.mineBlock(BlockChain.DIFFICULTY);
+            fileWriter.save(chain, blockChainFileName);
             for (Peer peer : peerRepository.findAll()) {
                 retryService.broadCastNewChain(peer.getAddress());
             }
@@ -104,16 +107,23 @@ public class BlockChainService {
         ScriptEngine engine = scriptEngineManager.getEngineByName("JavaScript");
         transaction.setResult(engine.eval(transaction.getOperation()).toString());
         chain.addTransaction(transaction);
-        FileWriter.save(chain.getBlocksAsString(mapper), blockChainFileName);
+        fileWriter.save(chain, blockChainFileName);
+        logger.info("Transaction added to block: " + chain.getLast().getTransactions().get(0).getOperation());
         return chain;
     }
 
-    public BlockChain mine() throws IOException {
+    public BlockChain mine() throws Exception {
         BlockChain chain = getChain();
         for (Peer peer : peerRepository.findAll()) {
             retryService.broadCastResult(peer.getAddress(), chain.getLast());
         }
         chain.mine();
-        return chain;
+        BlockChain oldChain = getChain();
+        if (consensus(chain, oldChain)) {
+            fileWriter.save(chain, blockChainFileName);
+            return chain;
+        }
+
+        return oldChain;
     }
 }

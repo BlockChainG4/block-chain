@@ -2,6 +2,7 @@ package com.g4.blockchain;
 
 import com.g4.blockchain.services.BlockChainService;
 import com.g4.blockchain.services.RetryService;
+import com.g4.blockchain.utilities.FileWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,8 +30,14 @@ public class TestRunner implements CommandLineRunner {
     @Inject
     private BlockChainService blockChainService;
 
+    @Inject
+    private FileWriter fileWriter;
+
+    @Value("${blockchain.file.name}")
+    private String blockChainFileName;
+
     @Override
-    public void run(String... args) throws InterruptedException {
+    public void run(String... args) throws Exception {
        List<String> peersAdded = new ArrayList<>();
         while (true) {
             for (String peer : initialPeers) {
@@ -38,7 +45,7 @@ public class TestRunner implements CommandLineRunner {
                 Peer p = retryService.addPeer(peer);
                 peersAdded.add(p.getAddress());
             }
-            if (peersAdded.size() > 2) break;
+            if (peersAdded.size() >= 2) break;
         }
         logger.info("Peer " + self + " is done adding itself to peers");
 
@@ -52,7 +59,7 @@ public class TestRunner implements CommandLineRunner {
                 }
             }
         }
-
+        fileWriter.save(chain, blockChainFileName);
 
     }
 }
