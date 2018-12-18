@@ -88,6 +88,12 @@ How to use:
 * Maeven
 * Execute `./run.sh`
 
+[![Watch screencast](https://github.com/BlockChainG4/block-chain/blob/e3a29f2187d85e232a47c127fdf474ab2593f243/ScreenCast.mov)
+
+To attach a new peer:
+
+* ``
+
 
 ### III. Conclusion
 
