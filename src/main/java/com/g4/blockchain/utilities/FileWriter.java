@@ -13,20 +13,19 @@ public class FileWriter {
     // Creates file locally
     //
 
-    public static void save(List<String> blockArray) throws Exception {
+    public static void save(List<String> blockArray, String fileName) throws Exception {
         /*PrintWriter pw = new PrintWriter(new FileOutputStream("blockchain.txt"));
         for (String hash : blockArray)
             pw.println(hash);
         pw.close();*/
 
         // Make sure you use \\ instead of \
-        String filePath = "FileMaker.txt";
         Writer bufferedWriter = null;
 
         try {
 
             //Creating a file
-            Writer fileWriter = new java.io.FileWriter(filePath);
+            Writer fileWriter = new java.io.FileWriter(fileName);
             bufferedWriter = new BufferedWriter(fileWriter);
 
             // Writing the content
@@ -35,7 +34,7 @@ public class FileWriter {
                 bufferedWriter.write(System.getProperty("line.separator"));
             }
         } catch (IOException e) {
-            System.out.println("Problem occurs when creating file " + filePath);
+            System.out.println("Problem occurs when creating file " + fileName);
             e.printStackTrace();
         } finally {
 
@@ -68,14 +67,6 @@ public class FileWriter {
             e.printStackTrace();
         }
         return lines;
-    }
-    public static void main(String[] args)
-    {
-        List l = readFileInList("FileMaker.txt");
-
-        Iterator<String> itr = l.iterator();
-        while (itr.hasNext())
-            System.out.println(itr.next());
     }
 
 }
