@@ -17,13 +17,56 @@ _Requirements_:
 ### Documentation:
 
 #### _I. Our Solution_
-_A. Concept: Calculator_
+
+Our blockchain keeps history of mathematical calculations made from incoming transaction(s). 
+
+```
+http://localhost:8081/action/transaction
+```
+
+POST:
+```json
+{
+"operation" : "2+2"
+}
+```
+
+```json
+[
+    {
+        "previousHash": "0",
+        "hash": "c44d9a9548990dd6cf95901a0f94a58e7d20cde06d67c393f49a5d90fc5c2b55",
+        "timeStamp": 1545152758880,
+        "nonce": 0,
+        "transactions": [
+            {
+                "hash": null,
+                "operation": "2+2",
+                "result": "4"
+            }
+        ],
+        "merkleRoot": null
+    }
+]
+```
+
+When a new peer joins the network, it uses consensus algorithm to get the longest and the latest updated chain.
+
+Blockchain system sequence:
+* Node gets transaction(s)
+* User requests node to start mining
+* Node broadcasts new block
+* All the nodes start mining new block
+* First to finish mining, broadcasts new block with result
+* Others gets the new block with result
+* Others validate the new block with result
+* If validate is true, others add the new block to chain
+
+The blockchain  is structures as linked list. Each block in the chain contains previous blocks hash,  and their own hash, created from all the data in the block, so called digital signature, linking blocks in a chain. Blockchain is a constantly growing chain of ordered information. Everytime, the chain adds a transaction, we save the whole chain to a file locally. Once application is closed and restarted, the file with transactions and hashes is overwritten with the new chain info.
 
 
-_B. Blockchain Implementation_
 
-
-_C. P2P Network_
+_. P2P Network_
 
 ![image](https://user-images.githubusercontent.com/16150075/50159949-509a6d00-02d8-11e9-9913-dc95358c8e72.png)
 
@@ -34,5 +77,12 @@ _C. P2P Network_
 
 #### _III. Conclusion_
 
+Blockchain has reinvented the way of transactions for economy, record keeping, cyveillance, security, privacy and many other areas of importance. Understanding the way blockchain works isn't easy, but once starting to build our own, it became more clear on how blockchain runs and the role of decentralized network. 
 
 #### _IV. References_
+
+* [Understanding Blockchain](https://hackernoon.com/3-steps-to-understanding-blockchain-8a285572daa3)
+* [Tutorial in Python](https://hackernoon.com/learn-blockchains-by-building-one-117428612f46)
+* [Tutorial in Java](https://medium.com/programmers-blockchain/create-simple-blockchain-java-tutorial-from-scratch-6eeed3cb03fa)
+* [51%](https://www.youtube.com/watch?annotation_id=annotation_2086342533&feature=iv&src_vid=6luEMwSAS0I&v=DHa5w1jWGuw)
+* https://arzdigital.com/learn-blockchains-by-building-one/
