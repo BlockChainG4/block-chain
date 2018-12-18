@@ -44,6 +44,8 @@ public class BlockChainService {
             for (int i = blocks.size() - 1; i > 0; i--) {
                 chain.add(mapper.readValue(blocks.get(i), Block.class));
             }
+        } else {
+            chain.add(new Block("0"));
         }
         return chain;
     }
@@ -97,11 +99,12 @@ public class BlockChainService {
         return newBlock.getTimeStamp() > ownBlock.getTimeStamp();
     }
 
-    public BlockChain addTransaction(Transaction transaction) throws IOException, ScriptException {
+    public BlockChain addTransaction(Transaction transaction) throws Exception {
         BlockChain chain = getChain();
         ScriptEngine engine = scriptEngineManager.getEngineByName("JavaScript");
         transaction.setResult(engine.eval(transaction.getOperation()).toString());
         chain.addTransaction(transaction);
+        FileWriter.save(chain.getBlocksAsString(mapper), blockChainFileName);
         return chain;
     }
 

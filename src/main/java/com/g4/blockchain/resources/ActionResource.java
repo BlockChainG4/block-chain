@@ -23,7 +23,7 @@ public class ActionResource {
 
 
     @PostMapping(path= "transaction")
-    public BlockChain addTransaction(@RequestBody Transaction trans) throws IOException, ScriptException {
+    public BlockChain addTransaction(@RequestBody Transaction trans) throws Exception {
         return service.addTransaction(trans);
 //        return Collections.singletonMap("message", String.format("Transaction will be added to Block {%d}", index));
     }

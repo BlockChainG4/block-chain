@@ -39,8 +39,11 @@ public class BlockChain extends LinkedList<Block> {
         return true;
     }
 
-    public BlockChain addTransaction(Transaction transaction) {
-        this.get(this.size() - 1).addTransaction(transaction);
+    public BlockChain addTransaction(Transaction transaction) throws JsonProcessingException {
+        if (this.size() == 0) {
+            this.add(new Block("0"));
+        }
+        this.getLast().addTransaction(transaction);
         return this;
     }
 
