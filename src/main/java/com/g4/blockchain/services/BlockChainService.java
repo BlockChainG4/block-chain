@@ -42,6 +42,9 @@ public class BlockChainService {
     @Value("${blockchain.file.name}")
     private String blockChainFileName;
 
+    @Value("${proof.algo}")
+    private String proofAlgo;
+
     Logger logger = LoggerFactory.getLogger(BlockChainService.class);
 
     public BlockChain getChain() throws IOException {
@@ -78,7 +81,7 @@ public class BlockChainService {
             fileWriter.save(incomingChain, blockChainFileName);
             Iterable<Peer> peers = peerRepository.findAll();
             peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), incomingChain));
-            chain.mine();
+            chain.mine(proofAlgo);
             fileWriter.save(incomingChain, blockChainFileName);
             for (Peer peer : peerRepository.findAll()) {
                 retryService.broadCastNewChain(peer.getAddress());
@@ -115,7 +118,7 @@ public class BlockChainService {
             retryService.broadCastResult(peer.getAddress(), chain);
         }
         chain = getChain();
-        chain.mine();
+        chain.mine(proofAlgo);
 
         BlockChain storedChain = getChain();
         if (consensus(chain, storedChain)) {

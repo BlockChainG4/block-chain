@@ -46,9 +46,9 @@ public class BlockChain extends LinkedList<Block> {
         return this;
     }
 
-    public BlockChain mine() throws JsonProcessingException {
+    public BlockChain mine(String proofAlgo) throws JsonProcessingException {
         logger.info("Blockchain mining latest blog");
-        this.get(this.size() - 1).mineBlock(DIFFICULTY);
+        this.get(this.size() - 1).mineBlock(DIFFICULTY, proofAlgo);
         String previousHash = this.get(this.size() - 1).getHash();
         this.add(new Block(previousHash));
         return this;

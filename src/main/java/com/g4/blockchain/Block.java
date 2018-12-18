@@ -13,7 +13,6 @@ public class Block {
     private String previousHash;
     private String hash;
     private long timeStamp;
-    private long miningInitiated;
     private int nonce;
     private LinkedList<Transaction> transactions;
     private String merkleRoot;
@@ -66,21 +65,38 @@ public class Block {
         return Hashing.applySha256(data);
     }
 
-    public void mineBlock(int difficulty) throws JsonProcessingException {
+    public void mineBlock(int difficulty, String proofAlgo) throws JsonProcessingException {
         merkleRoot = Hashing.getMerkleRoot(transactions);
         String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0"
         while(!this.hash.substring( 0, difficulty).equals(target)) {
-            nonce ++;
+            if (proofAlgo.equals("proof2")) {
+                nonce = proofOfWork2(nonce);
+            } else {
+                nonce = proofOfWork1(nonce);
+            }
+
             this.hash = calculateHash();
         }
-        System.out.println("Block Mined!!! : " + this.hash);
+        System.out.println("Block Mined: " + this.hash);
     }
+
+    private int proofOfWork2(int lastProof) {
+        int incrementor = lastProof + 1;
+        while (incrementor % 9 != 0) {
+            incrementor += 1;
+        }
+        return incrementor;
+    }
+
+    private int proofOfWork1(int lastProof) {
+        return ++lastProof;
+    }
+
     //Add transactions to this block
     public boolean addTransaction(Transaction transaction) {
         //process transaction and check if valid, unless block is genesis block then ignore.
         if(transaction == null) return false;
         transactions.add(transaction);
-        System.out.println("Transaction Successfully added to Block");
         return true;
     }
 
