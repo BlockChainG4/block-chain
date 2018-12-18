@@ -90,15 +90,12 @@ How to use:
 
 **Test Scenario:**
 
-1.
-
-**Screencast:**
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Yt-MutBzLE/0.jpg)](https://youtu.be/6Yt-MutBzLE)
 
 To attach a new peer:
 
 * `docker build .`
-* `docker run --name peer6 -e PEER_SELF=peer6 --network=g4blockchain -p 8086:8080 1418d6df4c6c`
+* `docker run --name <peer_name> -e PEER_SELF=<peer_name> --network=g4blockchain -p 8086:8080 <hash of image>`
 
 
 ### III. Conclusion
