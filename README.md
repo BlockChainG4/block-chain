@@ -6,11 +6,30 @@
 > - Cherry Rose Jimenez Semena
 > - Mahnaz Karimi
 
-_Formal Requirements:_
+---
 
-    * Network has to be a peer-to-peer network.
-    * Four nodes in your blockchain network.
+_Requirements_:
+- [x] blockchain in general(add transaction, mining blocks, consensus algorithm, etc.)
+- [x] peer-to-peer network
+- [x] 4 nodes
+- [x] reproducible setup - Bash Script(Test Scenario & Screencast)
 
-    * Provide a reproducible setup. (Bash script, that can be run from any Linux machine, which instantiates your blockchain with some example nodes and which executes a test scenario on your blockchain)
-    * Provide a screencast demonstrating all functions of your running blockchain, with the help of the above script.
-    * Provide references to all sources that you used for your implementation.
+### Documentation:
+
+#### _I. Our Solution_
+_A. Concept: Calculator_
+
+
+_B. Blockchain Implementation_
+
+
+_C. P2P Network_
+
+
+#### _II. Reproducible Setup_
+
+
+#### _III. Conclusion_
+
+
+#### _IV. References_
