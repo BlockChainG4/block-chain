@@ -66,11 +66,15 @@ The blockchain  is structures as linked list. Each block in the chain contains p
 
 
 
-_. P2P Network_
+- _P2P Network_
 
 ![image](https://user-images.githubusercontent.com/16150075/50159949-509a6d00-02d8-11e9-9913-dc95358c8e72.png)
 
+In order to ensure blockchain is secure and  up-to-date, it works in a peer-to-peer network. A node is represented as a peer. Each node stores the complete and updated version of the blockchain. The good thing in p2p network is that it doesn't depend on one party to define the state of the blockchain. Having multiple nodes makes it difficult for a malicious act to be performed as it will also be needed to be performed in all the nodes, and help to decentralized network.
 
+We used docker containers for initializing the 4 peers. It is predefined using docker-compose file that would run in ports — `8081`,` 8082`,`8083`, and `8084`.
+
+See here: [docker-compose.yml](https://github.com/BlockChainG4/block-chain/blob/master/docker-compose.yml)
 
 #### _II. Reproducible Setup_
 
@@ -81,8 +85,7 @@ Blockchain has reinvented the way of transactions for economy, record keeping, c
 
 #### _IV. References_
 
-* [Understanding Blockchain](https://hackernoon.com/3-steps-to-understanding-blockchain-8a285572daa3)
-* [Tutorial in Python](https://hackernoon.com/learn-blockchains-by-building-one-117428612f46)
-* [Tutorial in Java](https://medium.com/programmers-blockchain/create-simple-blockchain-java-tutorial-from-scratch-6eeed3cb03fa)
-* [51%](https://www.youtube.com/watch?annotation_id=annotation_2086342533&feature=iv&src_vid=6luEMwSAS0I&v=DHa5w1jWGuw)
-* https://arzdigital.com/learn-blockchains-by-building-one/
+* Understanding Blockchain - https://hackernoon.com/3-steps-to-understanding-blockchain-8a285572daa3
+* Tutorial in Python - https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
+* Tutorial in Java - https://medium.com/programmers-blockchain/create-simple-blockchain-java-tutorial-from-scratch-6eeed3cb03fa
+* 51% Attack Bitcoin Tutorial - https://www.youtube.com/watch?annotation_id=annotation_2086342533&feature=iv&src_vid=6luEMwSAS0I&v=DHa5w1jWGuw
