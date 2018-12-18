@@ -39,14 +39,13 @@ public class TestRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
        List<String> peersAdded = new ArrayList<>();
-        while (true) {
+        do {
             for (String peer : initialPeers) {
                 if (peer.equals(self)) continue;
                 Peer p = retryService.addPeer(peer);
                 peersAdded.add(p.getAddress());
             }
-            if (peersAdded.size() >= 2) break;
-        }
+        } while (peersAdded.size() < 1);
         logger.info("Peer " + self + " is done adding itself to peers");
 
         BlockChain chain = null;

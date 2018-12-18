@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,8 +53,9 @@ public class RetryService {
         restTemplate.put("http://".concat(peer).concat(":8080/peer/broadcast_mining/").concat(self), null);
     }
 
-    public void broadCastResult(String peer, Block block) {
-        restTemplate.postForLocation("http://".concat(peer).concat(":8080/peer/broadcast_result"), block);
+    @Async
+    public void broadCastResult(String peer, BlockChain blockChain) {
+        restTemplate.postForLocation("http://".concat(peer).concat(":8080/peer/broadcast_result"), blockChain);
     }
 
     @Recover

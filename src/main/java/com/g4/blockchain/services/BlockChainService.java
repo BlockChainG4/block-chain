@@ -15,6 +15,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -67,18 +68,18 @@ public class BlockChainService {
     }
 
     // Begin mining a block
-    public void broadCastResult(Block block) throws Exception {
+    public void broadCastResult(BlockChain incomingChain) throws Exception {
         // Check if incoming block is newer than latest in chain
         // and that the previous hash is the same. If not, ignore
         BlockChain chain = getChain();
-        Block latestChainBlock = chain.getLast();
-        if (verifyBlock(block, latestChainBlock)) {
+        logger.info("Checking if block is valid/newer");
+        if (consensus(incomingChain, chain)) {
+            logger.info("Block is newer.. Notifying peers and mining block");
+            fileWriter.save(incomingChain, blockChainFileName);
             Iterable<Peer> peers = peerRepository.findAll();
-            peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), block));
-            chain.add(block);
+            peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), incomingChain));
             chain.mine();
-            block.mineBlock(BlockChain.DIFFICULTY);
-            fileWriter.save(chain, blockChainFileName);
+            fileWriter.save(incomingChain, blockChainFileName);
             for (Peer peer : peerRepository.findAll()) {
                 retryService.broadCastNewChain(peer.getAddress());
             }
@@ -89,17 +90,12 @@ public class BlockChainService {
     }
 
     // Checks if the new chain is valid. Return true if it is
-    public boolean consensus(BlockChain newChain, BlockChain ownChain) {
-        if (verifyBlock(newChain.get(newChain.size() - 1), ownChain.get(ownChain.size() - 1))) {
-            if (newChain.size() > ownChain.size()) {
-                return true;
-            }
+    public boolean consensus(BlockChain newChain, BlockChain ownChain) throws JsonProcessingException {
+        if(newChain.size() > ownChain.size()) {
+            return newChain.isChainValid(BlockChain.DIFFICULTY);
         }
-        return false;
-    }
 
-    public boolean verifyBlock(Block newBlock, Block ownBlock) {
-        return newBlock.getTimeStamp() > ownBlock.getTimeStamp();
+        return false;
     }
 
     public BlockChain addTransaction(Transaction transaction) throws Exception {
@@ -115,15 +111,20 @@ public class BlockChainService {
     public BlockChain mine() throws Exception {
         BlockChain chain = getChain();
         for (Peer peer : peerRepository.findAll()) {
-            retryService.broadCastResult(peer.getAddress(), chain.getLast());
+            logger.info("Broadcasting new block to be mined");
+            retryService.broadCastResult(peer.getAddress(), chain);
         }
+        chain = getChain();
         chain.mine();
-        BlockChain oldChain = getChain();
-        if (consensus(chain, oldChain)) {
+
+        BlockChain storedChain = getChain();
+        if (consensus(chain, storedChain)) {
             fileWriter.save(chain, blockChainFileName);
+            for (Peer peer : peerRepository.findAll()) {
+                retryService.broadCastNewChain(peer.getAddress());
+            }
             return chain;
         }
-
-        return oldChain;
+        return storedChain;
     }
 }

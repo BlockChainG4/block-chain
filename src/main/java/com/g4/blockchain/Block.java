@@ -3,6 +3,7 @@ package com.g4.blockchain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.g4.blockchain.utilities.Hashing;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ public class Block {
     private String previousHash;
     private String hash;
     private long timeStamp;
+    private long miningInitiated;
     private int nonce;
     private LinkedList<Transaction> transactions;
     private String merkleRoot;
@@ -64,10 +66,7 @@ public class Block {
         return Hashing.applySha256(data);
     }
 
-
-
     public void mineBlock(int difficulty) throws JsonProcessingException {
-        this.timeStamp = Calendar.getInstance().getTimeInMillis();
         merkleRoot = Hashing.getMerkleRoot(transactions);
         String target = new String(new char[difficulty]).replace('\0', '0'); //Create a string with difficulty * "0"
         while(!this.hash.substring( 0, difficulty).equals(target)) {

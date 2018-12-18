@@ -65,8 +65,8 @@ public class PeerResource {
     }
 
     @PostMapping(path = "broadcast_result")
-    public void broadCastResult(@RequestBody Block block) throws Exception {
-        blockChainService.broadCastResult(block);
+    public void broadCastResult(@RequestBody BlockChain blockChain) throws Exception {
+        blockChainService.broadCastResult(blockChain);
     }
 
     @GetMapping(path = "ping")

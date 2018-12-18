@@ -2,6 +2,8 @@ package com.g4.blockchain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,6 +12,8 @@ import java.util.List;
 public class BlockChain extends LinkedList<Block> {
 
     public static final int DIFFICULTY = 4;
+
+    Logger logger = LoggerFactory.getLogger(BlockChain.class);
 
     public Boolean isChainValid(int difficulty) throws JsonProcessingException {
         Block currentBlock;
@@ -30,11 +34,6 @@ public class BlockChain extends LinkedList<Block> {
                 System.out.println("Previous Hashes not equal");
                 return false;
             }
-            //check if hash is solved
-            if(!currentBlock.getHash().substring( 0, difficulty).equals(hashTarget)) {
-                System.out.println("This block hasn't been mined");
-                return false;
-            }
         }
         return true;
     }
@@ -48,6 +47,7 @@ public class BlockChain extends LinkedList<Block> {
     }
 
     public BlockChain mine() throws JsonProcessingException {
+        logger.info("Blockchain mining latest blog");
         this.get(this.size() - 1).mineBlock(DIFFICULTY);
         String previousHash = this.get(this.size() - 1).getHash();
         this.add(new Block(previousHash));
