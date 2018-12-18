@@ -80,6 +80,14 @@ See here: [docker-compose.yml](https://github.com/BlockChainG4/block-chain/blob/
 
 ### II. Reproducible Setup
 
+How to use:
+
+* Clone project
+* Have docker running
+* Java 11
+* Maeven
+* Execute `./run.sh`
+
 
 ### III. Conclusion
 
