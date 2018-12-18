@@ -68,7 +68,7 @@ The blockchain  is structures as linked list. Each block in the chain contains p
 
 
 
-- _**P2P Network**_
+_**P2P Network**_
 
 ![image](https://user-images.githubusercontent.com/16150075/50159949-509a6d00-02d8-11e9-9913-dc95358c8e72.png)
 
@@ -88,11 +88,12 @@ How to use:
 * Maeven
 * Execute `./run.sh`
 
-[![Watch screencast](https://github.com/BlockChainG4/block-chain/blob/e3a29f2187d85e232a47c127fdf474ab2593f243/ScreenCast.mov)
+![Watch screencast](https://github.com/BlockChainG4/block-chain/blob/e3a29f2187d85e232a47c127fdf474ab2593f243/ScreenCast.mov)
 
 To attach a new peer:
 
-* ``
+* `docker build .`
+* `docker run --name peer6 -e PEER_SELF=peer6 --network=g4blockchain -p 8086:8080 1418d6df4c6c`
 
 
 ### III. Conclusion
