@@ -93,8 +93,7 @@ How to use:
 1.
 
 **Screencast:**
-[![Watch the video](https://user-images.githubusercontent.com/16150075/50180040-ddf5b580-0308-11e9-8790-077561cafee7.png)](https://github.com/BlockChainG4/block-chain/blob/e3a29f2187d85e232a47c127fdf474ab2593f243/ScreenCast.mov)
-
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/6Yt-MutBzLE/0.jpg)](https://youtu.be/6Yt-MutBzLE)
 
 To attach a new peer:
 
