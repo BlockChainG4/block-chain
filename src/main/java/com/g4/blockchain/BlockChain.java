@@ -1,15 +1,13 @@
 package com.g4.blockchain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.g4.blockchain.services.RetryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class BlockChain extends LinkedList<Block> {
-
-    @Inject
-    private RetryService retryService;
 
     public static final int DIFFICULTY = 4;
 
@@ -51,6 +49,14 @@ public class BlockChain extends LinkedList<Block> {
         String previousHash = this.get(this.size() - 1).getHash();
         this.add(new Block(previousHash));
         return this;
+    }
+
+    public List<String> getBlocksAsString(ObjectMapper mapper) throws JsonProcessingException {
+        List<String> blocks = new ArrayList<>();
+        for (Block b : this) {
+            blocks.add(mapper.writeValueAsString(b));
+        }
+        return blocks;
     }
 
 }

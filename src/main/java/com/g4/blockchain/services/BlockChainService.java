@@ -1,10 +1,16 @@
 package com.g4.blockchain.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.g4.blockchain.*;
+import com.g4.blockchain.utilities.FileWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BlockChainService {
@@ -15,38 +21,71 @@ public class BlockChainService {
     @Autowired
     private PeerRepository peerRepository;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     @Value("${peer.self}")
     private String self;
 
-    public BlockChain getChain() {
+    @Value("${blockchain.file.name}")
+    private String blockChainFileName;
+
+    public BlockChain getChain() throws IOException {
         // Read from file and get the entire block chain
-        return null;
+        BlockChain chain = new BlockChain();
+        List<String> blocks = FileWriter.readFileInList(blockChainFileName);
+        for (int i = blocks.size() - 1; i > 0; i--) {
+            chain.add(mapper.readValue(blocks.get(i), Block.class));
+        }
+        return chain;
     }
 
     // When mining is done
-    public void broadCastMining(String address) {
-        BlockChain chain = retryService.getLatestChain(address);
+    public void broadCastMining(String address) throws Exception {
+        BlockChain newChain = retryService.getLatestChain(address);
 
-        // Replace comparison with stored blockchain
-        if (chain.get(chain.size() - 1).getTimeStamp() < chain.get(chain.size() - 1).getTimeStamp()) {
+        BlockChain ownChain = getChain();
+
+        if (consensus(newChain, ownChain)) {
             // It is newer than the one we have here
             // so we save it to a file and broadcast it to all out peers that we have a newer one
-
+            FileWriter.save(newChain.getBlocksAsString(mapper), blockChainFileName);
             retryService.broadCastNewChain(self);
         }
     }
 
-    public void broadCastResult(Block block) throws JsonProcessingException {
+    // Begin mining a block
+    public void broadCastResult(Block block) throws Exception {
         // Check if incoming block is newer than latest in chain
         // and that the previous hash is the same. If not, ignore
-        if (block.getTimeStamp() < block.getTimeStamp() && block.getPreviousHash().equals(block.getPreviousHash())) {
+        BlockChain chain = getChain();
+        Block latestChainBlock = chain.get(chain.size() - 1);
+        if (verifyBlock(block, latestChainBlock) && block.getPreviousHash().equals(latestChainBlock.getHash())) {
             Iterable<Peer> peers = peerRepository.findAll();
             peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), block));
-            block.mineBlock(BlockChain.DIFFICULTY);
+            chain.add(block);
+            chain.mine();
+            FileWriter.save(chain.getBlocksAsString(mapper), blockChainFileName);
+            for (Peer peer : peerRepository.findAll()) {
+                retryService.broadCastNewChain(peer.getAddress());
+            }
             // Filewriter read current blockchain
             // Append hash to list, write to file
             // broadcast mining is done.
         }
-        // Send the block to all other known peers if it's the latest one and begin mining the block
+    }
+
+    // Checks if the new chain is valid. Return true if it is
+    public boolean consensus(BlockChain newChain, BlockChain ownChain) {
+        if (verifyBlock(newChain.get(newChain.size() - 1), ownChain.get(ownChain.size() - 1))) {
+            if (newChain.size() > ownChain.size()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean verifyBlock(Block newBlock, Block ownBlock) {
+        return newBlock.getTimeStamp() > ownBlock.getTimeStamp();
     }
 }

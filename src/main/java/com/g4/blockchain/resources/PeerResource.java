@@ -1,6 +1,5 @@
 package com.g4.blockchain.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.g4.blockchain.*;
 import com.g4.blockchain.services.BlockChainService;
 import org.slf4j.Logger;
@@ -10,9 +9,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("peer")
@@ -50,7 +49,7 @@ public class PeerResource {
     }
 
     @GetMapping(path = "block_chain")
-    public BlockChain getChain() {
+    public BlockChain getChain() throws IOException {
         return blockChainService.getChain();
     }
 
@@ -61,23 +60,18 @@ public class PeerResource {
      * @param address
      */
     @PutMapping(path = "broadcast_mining/{address}")
-    public void broadCastMining(@PathVariable("address") String address) {
+    public void broadCastMining(@PathVariable("address") String address) throws Exception {
         blockChainService.broadCastMining(address);
     }
 
     @PostMapping(path = "broadcast_result")
-    public void broadCastResult(@RequestBody Block block) throws JsonProcessingException {
+    public void broadCastResult(@RequestBody Block block) throws Exception {
         blockChainService.broadCastResult(block);
     }
 
     @GetMapping(path = "ping")
     public Boolean ping() {
         return true;
-    }
-
-    @PostMapping("add")
-    public void addTransaction(Transaction transaction) {
-        blockChainService.getChain().addTransaction(transaction);
     }
 
 }
