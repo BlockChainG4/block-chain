@@ -57,12 +57,12 @@ When a new peer joins the network, it uses consensus algorithm to get the longes
 Blockchain system sequence:
 * Node gets transaction(s)
 * User requests node to start mining
-* Node broadcasts new block
-* All the nodes start mining new block
-* First to finish mining, broadcasts new block with result
-* Others gets the new block with result
-* Others validate the new block with result
-* If validate is true, others add the new block to chain
+* Node broadcasts new chain with added block containing incoming transaction to be mined
+* All the nodes start mining
+* First to finish mining, broadcasts result
+* Others gets the result
+* Others validate the result
+* If validate is true, update the chain
 
 The blockchain  is structures as linked list. Each block in the chain contains previous blocks hash, and their own hash, created from all the data in the block, so called digital signature, linking blocks in a chain. Blockchain is a constantly growing chain of ordered information. Everytime, the chain adds a transaction, we save the whole chain to a file locally. Once application is closed and restarted, the file with transactions and hashes is overwritten with the new chain info.
 
