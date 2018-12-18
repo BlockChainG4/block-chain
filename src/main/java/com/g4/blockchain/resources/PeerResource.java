@@ -1,9 +1,7 @@
 package com.g4.blockchain.resources;
 
-import com.g4.blockchain.Block;
-import com.g4.blockchain.BlockChain;
-import com.g4.blockchain.Peer;
-import com.g4.blockchain.PeerRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.g4.blockchain.*;
 import com.g4.blockchain.services.BlockChainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,13 +66,18 @@ public class PeerResource {
     }
 
     @PostMapping(path = "broadcast_result")
-    public void broadCastResult(@RequestBody Block block) {
+    public void broadCastResult(@RequestBody Block block) throws JsonProcessingException {
         blockChainService.broadCastResult(block);
     }
 
     @GetMapping(path = "ping")
     public Boolean ping() {
         return true;
+    }
+
+    @PostMapping("add")
+    public void addTransaction(Transaction transaction) {
+        blockChainService.getChain().addTransaction(transaction);
     }
 
 }

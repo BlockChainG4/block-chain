@@ -28,9 +28,9 @@ public class Hashing {
     }
 
     public static String getMerkleRoot(LinkedList<Transaction> transactions) {
-            List<String> treeList = merkleTree(transactions);
-            // Last element is the merkle root hash if transactions
-            return treeList.get(treeList.size()-1);
+        List<String> treeList = merkleTree(transactions);
+        // Last element is the merkle root hash if transactions
+        return treeList.get(treeList.size()-1);
     }
 
     public static List<String> merkleTree(LinkedList<Transaction> transactions) {

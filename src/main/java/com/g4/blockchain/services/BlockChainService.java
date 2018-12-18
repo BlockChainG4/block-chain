@@ -19,9 +19,11 @@ public class BlockChainService {
     private String self;
 
     public BlockChain getChain() {
+        // Read from file and get the entire block chain
         return null;
     }
 
+    // When mining is done
     public void broadCastMining(String address) {
         BlockChain chain = retryService.getLatestChain(address);
 
@@ -34,12 +36,16 @@ public class BlockChainService {
         }
     }
 
-    public void broadCastResult(Block block) {
+    public void broadCastResult(Block block) throws JsonProcessingException {
         // Check if incoming block is newer than latest in chain
         // and that the previous hash is the same. If not, ignore
         if (block.getTimeStamp() < block.getTimeStamp() && block.getPreviousHash().equals(block.getPreviousHash())) {
             Iterable<Peer> peers = peerRepository.findAll();
             peers.forEach(peer -> retryService.broadCastResult(peer.getAddress(), block));
+            block.mineBlock(BlockChain.DIFFICULTY);
+            // Filewriter read current blockchain
+            // Append hash to list, write to file
+            // broadcast mining is done.
         }
         // Send the block to all other known peers if it's the latest one and begin mining the block
     }

@@ -1,14 +1,17 @@
 package com.g4.blockchain;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.g4.blockchain.services.RetryService;
 
+import javax.inject.Inject;
 import java.util.LinkedList;
 
 public class BlockChain extends LinkedList<Block> {
 
-    public static final int BLOCK_SIZE = 3;
-    public static final int DIFFICULTY = 4;
+    @Inject
+    private RetryService retryService;
 
+    public static final int DIFFICULTY = 4;
 
     public Boolean isChainValid(int difficulty) throws JsonProcessingException {
         Block currentBlock;
@@ -38,13 +41,15 @@ public class BlockChain extends LinkedList<Block> {
         return true;
     }
 
-    public BlockChain addTransaction(Transaction transaction) throws JsonProcessingException {
-        if (this.get(this.size() - 1).getTransactions().size() == BLOCK_SIZE) {
-            this.get(this.size() - 1).mineBlock(DIFFICULTY);
-            String previousHash = this.get(this.size() - 1).getHash();
-            this.add(new Block(previousHash));
-        }
+    public BlockChain addTransaction(Transaction transaction) {
         this.get(this.size() - 1).addTransaction(transaction);
+        return this;
+    }
+
+    public BlockChain mine() throws JsonProcessingException {
+        this.get(this.size() - 1).mineBlock(DIFFICULTY);
+        String previousHash = this.get(this.size() - 1).getHash();
+        this.add(new Block(previousHash));
         return this;
     }
 
