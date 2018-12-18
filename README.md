@@ -92,10 +92,24 @@ How to use:
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/tHkbuPC4ti8/0.jpg)](https://www.youtube.com/watch?v=tHkbuPC4ti8)
 
-To attach a new peer:
+* Starts the application with `./run.sh`
+* In Postman adds the transaction to Peer_1
 
-* `docker build .`
-* `docker run --name <peer_name> -e PEER_SELF=<peer_name> --network=g4blockchain -p 8086:8080 <hash of image>`
+```
+http://localhost:8081/action/transaction
+```
+
+* Peer_1 mines
+
+```
+http://localhost:8081/action/mine
+```
+
+* Peer_4 gets the new chain
+
+```
+http://localhost:8084/action/
+```
 
 
 ### III. Conclusion
