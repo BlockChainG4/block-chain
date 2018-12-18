@@ -93,6 +93,8 @@ How to use:
 
 Blockchain has reinvented the way of transactions for economy, record keeping, cyveillance, security, privacy and many other areas of importance. Understanding the way blockchain works isn't easy, but once starting to build our own, it became more clear on how blockchain runs and the role of decentralized network. 
 
+So, basically we made a blockchain — a data structure hosted on a peer-to-peer network of participating 4 nodes/peers and miners that follows the consensus protocol, set of rules in adding the blocks to the chain, and whether blocks/blockchain itself are valid.
+
 ### IV. References
 
 * Understanding Blockchain - https://hackernoon.com/3-steps-to-understanding-blockchain-8a285572daa3
