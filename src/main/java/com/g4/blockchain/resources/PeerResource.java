@@ -1,7 +1,7 @@
 package com.g4.blockchain.resources;
 
-import com.g4.blockchain.Peer;
-import com.g4.blockchain.PeerRepository;
+import com.g4.blockchain.*;
+import com.g4.blockchain.services.BlockChainService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("peer")
@@ -22,6 +23,9 @@ public class PeerResource {
 
     @Autowired
     private PeerRepository repository;
+
+    @Autowired
+    private BlockChainService blockChainService;
 
     @Value("${peer.self}")
     private String self;
@@ -42,6 +46,27 @@ public class PeerResource {
         } else {
             throw new RuntimeException("Peer already added");
         }
+    }
+
+    @GetMapping(path = "block_chain")
+    public BlockChain getChain() throws IOException {
+        return blockChainService.getChain();
+    }
+
+
+    /**
+     * Call this method to tell your peers that you have a newer updated version
+     * of the chain and they should query you for it
+     * @param address
+     */
+    @PutMapping(path = "broadcast_mining/{address}")
+    public void broadCastMining(@PathVariable("address") String address) throws Exception {
+        blockChainService.broadCastMining(address);
+    }
+
+    @PostMapping(path = "broadcast_result")
+    public void broadCastResult(@RequestBody BlockChain blockChain) throws Exception {
+        blockChainService.broadCastResult(blockChain);
     }
 
     @GetMapping(path = "ping")

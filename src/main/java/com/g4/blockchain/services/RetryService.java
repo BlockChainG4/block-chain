@@ -1,5 +1,7 @@
 package com.g4.blockchain.services;
 
+import com.g4.blockchain.Block;
+import com.g4.blockchain.BlockChain;
 import com.g4.blockchain.Peer;
 import com.g4.blockchain.Peers;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -39,6 +42,20 @@ public class RetryService {
     public Boolean ping(String peer) {
         ResponseEntity<Boolean> responseEntity = restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer/ping"), Boolean.class);
         return responseEntity.getStatusCode().equals(HttpStatus.OK);
+    }
+
+    public BlockChain getLatestChain(String peer) {
+        // Find latest chain and return that one.
+        return restTemplate.getForEntity("http://".concat(peer).concat(":8080/peer/block_chain"), BlockChain.class).getBody();
+    }
+
+    public void broadCastNewChain(String peer) {
+        restTemplate.put("http://".concat(peer).concat(":8080/peer/broadcast_mining/").concat(self), null);
+    }
+
+    @Async
+    public void broadCastResult(String peer, BlockChain blockChain) {
+        restTemplate.postForLocation("http://".concat(peer).concat(":8080/peer/broadcast_result"), blockChain);
     }
 
     @Recover

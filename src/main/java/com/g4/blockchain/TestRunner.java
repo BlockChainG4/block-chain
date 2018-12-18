@@ -1,6 +1,8 @@
 package com.g4.blockchain;
 
+import com.g4.blockchain.services.BlockChainService;
 import com.g4.blockchain.services.RetryService;
+import com.g4.blockchain.utilities.FileWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,17 +27,38 @@ public class TestRunner implements CommandLineRunner {
     @Inject
     private RetryService retryService;
 
+    @Inject
+    private BlockChainService blockChainService;
+
+    @Inject
+    private FileWriter fileWriter;
+
+    @Value("${blockchain.file.name}")
+    private String blockChainFileName;
+
     @Override
-    public void run(String... args) throws InterruptedException {
+    public void run(String... args) throws Exception {
        List<String> peersAdded = new ArrayList<>();
-        while (true) {
+        do {
             for (String peer : initialPeers) {
                 if (peer.equals(self)) continue;
                 Peer p = retryService.addPeer(peer);
                 peersAdded.add(p.getAddress());
             }
-            if (peersAdded.size() > 2) break;
-        }
+        } while (peersAdded.size() < 1);
         logger.info("Peer " + self + " is done adding itself to peers");
+
+        BlockChain chain = null;
+        for (String peer : peersAdded) {
+            BlockChain c = retryService.getLatestChain(peer);
+            if (chain == null) chain = c;
+            if (chain != null && c.size() > chain.size()) {
+                if (blockChainService.consensus(c, chain)) {
+                    chain = c;
+                }
+            }
+        }
+        fileWriter.save(chain, blockChainFileName);
+
     }
 }
