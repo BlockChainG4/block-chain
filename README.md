@@ -14,9 +14,11 @@ _Requirements_:
 - [x] 4 nodes
 - [x] reproducible setup - Bash Script(Test Scenario & Screencast)
 
-### Documentation:
+## Documentation:
 
-#### _I. Our Solution_
+### I. Our Solution
+
+_**Blockchain Implementation**_
 
 Our blockchain keeps history of mathematical calculations made from incoming transaction(s). 
 
@@ -66,7 +68,7 @@ The blockchain  is structures as linked list. Each block in the chain contains p
 
 
 
-- _P2P Network_
+- _**P2P Network**_
 
 ![image](https://user-images.githubusercontent.com/16150075/50159949-509a6d00-02d8-11e9-9913-dc95358c8e72.png)
 
@@ -76,14 +78,14 @@ We used docker containers for initializing the 4 peers. It is predefined using d
 
 See here: [docker-compose.yml](https://github.com/BlockChainG4/block-chain/blob/master/docker-compose.yml)
 
-#### _II. Reproducible Setup_
+### II. Reproducible Setup
 
 
-#### _III. Conclusion_
+### III. Conclusion
 
 Blockchain has reinvented the way of transactions for economy, record keeping, cyveillance, security, privacy and many other areas of importance. Understanding the way blockchain works isn't easy, but once starting to build our own, it became more clear on how blockchain runs and the role of decentralized network. 
 
-#### _IV. References_
+### IV. References
 
 * Understanding Blockchain - https://hackernoon.com/3-steps-to-understanding-blockchain-8a285572daa3
 * Tutorial in Python - https://hackernoon.com/learn-blockchains-by-building-one-117428612f46
