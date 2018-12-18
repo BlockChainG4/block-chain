@@ -3,9 +3,10 @@ package com.g4.blockchain.utilities;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 @Service // filewriter in test know about th9
 public class FileWriter {
@@ -50,4 +51,31 @@ public class FileWriter {
       }
 
   }
+    public static List<String> readFileInList(String fileName)
+    {
+
+        List<String> lines = List.of();
+        try
+        {
+            lines =
+                    Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
+        }
+
+        catch (IOException e)
+        {
+
+            // do something
+            e.printStackTrace();
+        }
+        return lines;
+    }
+    public static void main(String[] args)
+    {
+        List l = readFileInList("FileMaker.txt");
+
+        Iterator<String> itr = l.iterator();
+        while (itr.hasNext())
+            System.out.println(itr.next());
+    }
+
 }
