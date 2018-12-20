@@ -33,7 +33,7 @@ public class BlockChainTest {
         blockchain.addTransaction(new Transaction("4*3"));
         blockchain.addTransaction(new Transaction("5*3"));
         System.out.println("Trying to Mine block 1... ");
-        blockchain.get(0).mineBlock(BlockChain.DIFFICULTY);
+        blockchain.get(0).mineBlock(BlockChain.DIFFICULTY, "proof1");
 
         System.out.println("\nBlockchain is Valid: " + blockchain.isChainValid(BlockChain.DIFFICULTY));
 
